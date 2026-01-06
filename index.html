@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WC CHAOS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+
+  /* BACKGROUND LANTAI PENUH TAI (SVG INLINE) */
+  background-image: url("data:image/svg+xml;utf8,\
+  <svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'>\
+    <text x='5' y='45' font-size='40'>💩</text>\
+  </svg>");
+  background-repeat: repeat;
+}
+
+h1 {
+  font-size: 5rem;
+  z-index: 10;
+}
+
+/* TAI JATUH */
+.poop {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  from { transform: translateY(-50px) rotate(0deg); }
+  to   { transform: translateY(85vh) rotate(360deg); }
+}
+
+/* TAI DI LANTAI */
+.poop-floor {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  cursor: pointer;
+}
+
+@keyframes squish {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3,0.7); }
+  100% { transform: scale(1); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- EMOJI TETEP -->
+<h1>🫵😂</h1>
+
+<!-- TAI LANTAI (SVG INLINE, GA BISA RUSAK) -->
+<img class="poop-floor"
+src="data:image/svg+xml;utf8,
+<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'>
+  <text x='5' y='50' font-size='50'>💩</text>
+</svg>">
+
+<script>
+/* AUDIO GENERATOR (GA PAKE FILE) */
+function playSound(freq, duration) {
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.frequency.value = freq;
+  osc.type = "sawtooth";
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start();
+  gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+  osc.stop(ctx.currentTime + duration);
+}
+
+/* BUAT TAI JATUH */
+setInterval(() => {
+  const poop = document.createElement("img");
+  poop.className = "poop";
+  poop.style.left = Math.random() * window.innerWidth + "px";
+  poop.style.animationDuration = (3 + Math.random() * 2) + "s";
+
+  poop.src = "data:image/svg+xml;utf8,\
+  <svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'>\
+    <text x='2' y='35' font-size='35'>💩</text>\
+  </svg>";
+
+  document.body.appendChild(poop);
+
+  /* SUARA JATUH */
+  playSound(120, 0.25);
+
+  /* KLIK = MENCRET */
+  poop.onclick = () => {
+    playSound(40, 0.6);
+    poop.style.animation = "squish 0.4s";
+  };
+
+  setTimeout(() => poop.remove(), 6000);
+}, 700);
+
+/* TAI LANTAI DI KLIK */
+document.querySelector(".poop-floor").onclick = function() {
+  playSound(35, 0.7);
+  this.style.animation = "squish 0.4s";
+};
+</script>
+
+</body>
+</html>
